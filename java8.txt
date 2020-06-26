@@ -1,0 +1,658 @@
+Java 8
+	---------------
+		- Lambda Expressions
+		- Functional Programming
+			- Functional Interfaces
+			- Predefined functional interfaces 
+				i.e. Predicate, Function, Consumer, Supplier....				
+		- Default methods in Interfaces
+			- concrete methods in the interface
+		- Static methods in Interfaces
+		- Stream API
+		- Concurrent API
+		- Date & Time API (JODA time api)
+		- NIO API 
+
+
+	Lambda Expressions
+	-------------------------
+		- annoymouse functon (a function without name, return type, access modifer)
+
+
+		public void show(){
+			System.out.println("hello");
+		}
+
+		
+		() -> {
+			System.out.println("hello");
+		}
+
+		() -> System.out.println("hello");
+
+
+
+
+		public int arithAdd(int a, int b){
+			return a+b;
+		}
+
+		(int a, int b) -> a+b;	
+
+		(a, b) -> a+b;
+		
+
+		public int getLength(String str){
+			return str.length();
+		}
+
+
+		(String str) -> str.length();
+
+		(str) -> str.length();
+
+		str -> str.length();
+
+
+	Functional Interfaces
+	---------------------------
+		- any interface that contains a single abstract method is called function interface 
+			i.e. Runnable 	---> public void run()	
+			     Comparable			---> public int compareTo(Object o)
+			     Comparator			---> public int compare(Object o1, Object o2)
+
+		- reduce length of the code i.e. simplfy your programs 
+	
+		interface A {
+		     void xyz();
+		}
+
+		class Demo implements A {
+			public void xyz(){
+				//statements;
+				//statements;
+			}
+		}
+
+		A a = new Demo();
+		a.xyz();
+
+
+		A a = new A(){
+			public void xyz(){
+				//statements;
+				//statements;
+			}
+		};
+		a.xyz();
+
+
+
+
+
+		A a = () -> statements;
+		a.xyz();
+		
+
+	
+Default methods interface
+-------------------------------
+	- concrete methods, by default available to all implementation classes,
+		and also the classes can override it 
+	- default methods are also called defender methods / virtual extention methods
+	- we can add new/additional functionalities, without affecting the implementation classes
+		
+		interface Taxable{
+
+		}
+
+
+		abstract class Product {
+			//common data members
+		}
+
+		class Toy extends Product implements Taxable{
+
+		}
+
+		class Cloths extends Product{
+
+		}
+
+		abstract class Service{
+
+		}
+
+		class DeliveryService extends Service  implements Taxable{
+
+		}
+
+Static methods in interfaces
+------------------------------------
+	- similar to default methods, but we cannot override them
+
+	Predefined functional interfaces
+	--------------------------------------
+
+	1. Predicate
+		- an interface which contains only one abstract method
+		- java.util.function
+
+		- used for conditional checks
+
+			interface Predicate<T>{
+				public boolean test(T t){
+
+				}
+			}
+
+			//validate length of given string 
+			Predicate<String> predicate = (str) -> str.length() >= 6;
+			predicate.test("somevalue");
+			
+			//check whether given collection is empty
+			Predicate<Collection> predicate = (col) -> col.isEmpty();
+			predicate.test(list);
+			predicate.test(set);
+			predicate.test(queue);
+
+
+		Predicate has below default methdos 
+		--------------------------------------
+			and()			
+			or()
+			negate()
+
+
+
+	2. Function
+
+		- Function can return any type of value and can have 1 parameter of any type 
+		- used to perform certain operations & return some result 
+
+		interface Function<T, R>{
+			public R apply(T t);
+		}
+
+		Function<String, Integer> function = (String s) -> s.length();
+
+	3. Consumer
+
+		interface Consumer<T>{
+			void accept(T t);
+		}
+
+	4. Supplier
+
+		interface Supplier<T>{
+			public T get();
+		}
+
+
+Stream API
+------------------------------
+	- used to perform some operations on collections
+	- it supports sequential and parallel operations 
+
+	- every collection class has a method 'stream()' 
+
+		Stream s = listEmp.stream()
+		Stream s = setEmp.stream()
+		Stream s = queueEmp.stream()
+
+	- obtain stream from an array
+		Stream s = Arrays.stream(arr);
+
+	- obtain stream from a file 
+
+		BufferedReader br = new BufferedReader(new FileReader("xxxx.txt"));
+		Stream s = br.lines();
+
+	- Stream
+		- every straem has...
+			- a source i.e. collection, array, an IO channel
+			- zero or more intermediate operations i.e filter, sort, map etc.
+			- terminal operaion i.e. produces some non-stream results i.e. primitive, collection or void 
+
+
+	- Operations 
+		- Intermediate operations
+
+			- filter()
+				- return a new stream that consists elements matching the given condition
+			- map()
+				- return a new stream, consist of elements which are result of applying a given function
+
+				- mapToInt()
+				- mapToLong()
+				- mapToDouble()
+
+			- sorted()
+				- sorted(comparator)
+				- returns a new stream containing sorted elements according to the natural ordering or 					external comparator
+
+			- limit()
+
+			- distinct()
+
+			- skip()
+
+
+		- Terminal operations 
+		--------------------------------
+			-> can return a primitive value (boolean, long, a concrete type, or void)
+			-> eagarly executed, and mostly the last operations on stream
+	
+
+			- allMatch(Predicate)
+				- returns true if all elements match the given predicate 
+
+			- anyMatch(Predicate)
+			- noneMatch(Predicate)
+
+			- collect()
+				- accumulates elements in the stream into a container i.e. Collection 	
+
+			- count()
+			- min()
+			- max()
+			- average()
+			- forEach()
+ 			
+			- reduce()
+
+		- Parallel Streams 
+
+				Stream s = list.parallelStream()
+
+
+
+
+        Date & Time API
+	---------------------
+		- LocalDate
+		- LocalTime
+		- LocalDateTime
+		- ZoneId
+		- ZonedDateTime
+		- Period (operations on date)
+		- Duration (operations on time)
+
+
+Collection
+           ------------
+                        Iterable<T>
+			     |
+			Collection<T> (I)		<<--describes common methods 					
+			     |							
+	----------------------------------------------------------------		   
+	List<T> (I)		Set<T> (i)			Queue<T> (i)
+	  |			  |
+       	ArrayList<T>		HashSet
+   	LinkedList<T>		LinkedHashSet
+	Vector<T>		TreeSet
+	Stack<T>
+
+
+
+
+	Map (i)
+
+
+	Collection<T>  Interface methods
+	------------------------------------
+		boolean add(Object obj)
+		boolean addAll(Collection col)
+		boolean remove(Object obj)
+		boolean removeAll(object obj)
+		void clear()
+		boolean contains(Object obj)
+		Iterator iterator()
+		boolean isEmpty()
+		int size()
+		
+	List<T> interface
+	-------------------------
+		boolean add(T obj, int index)
+		boolean addAll(int index, Collection col)
+		T get(int index)
+		ListIterator listIterator()
+		List subList(int form, int to)
+
+	List Implementation classes
+	--------------------------------
+
+					Collection
+					    |
+					  List
+					    |
+					AbstractList <abstract class>
+					    |
+				----------------------------------------------------
+				ArrayList<T>	Vector<T>		LinkedList<T>
+						  |
+						Stack<T>
+
+
+			
+		ArrayList		LinkedList		Vector		Stack
+DS		Array			double-linkedlist	Array		Array
+
+duplicate	allowed			allowed			allowed		allowed
+
+nullvalues	allowed			allowed			allowed		allowed
+
+synchronized	no			no			yes		yes
+
+initial
+capacity	1			NA			10		10
+
+
+
+
+
+
+	int new = (oldcap*3)/2+1
+
+
+	Synchronized lists
+	--------------------------
+		List<Integer> list = new ArrayList<>();
+		List list1 = Collections.synchronizedList(list);
+
+		** locks whole list for thread-safety 
+
+
+	CopyOnWriteArrayList (java.util.concurrent)
+	----------------------------------------------
+		** locks the list during write operations 
+		** multiple threads can perform read operations concurrently 	
+
+
+	Collections class
+	-----------------------
+		- java.util package 
+		- it is utility class provides some method to manipulate over group of objects
+			sort()
+			...
+			...
+
+	Sorting list
+	---------------------
+
+		** the elements of the list must be Comparable or an external comparator should be provided
+
+		Collections.sort(list)
+		Collections.sort(list, Comparator);
+
+
+	Preserve the equality contract when overriding equals()
+	-------------------------------------------------------------
+		1. reflexive  	i.e. x.equals(x) must be true
+		2. symmetric 	i.e. x.equals(y) returns true, if and only y.equals(x)returns true 
+		3. transitive	i.e. x.equals(y) returns true and y.equals(z) returns true then x.equals(z) must also return 				true
+		4. consistent	
+		5. for any non-null ref value it must return false
+			x.equals(null)	return false 
+
+
+	default implementation of equals() method in object class
+	------------------------------------------------------------
+
+
+	int hashCode()
+	----------------
+		- objects that are equal to each other, must return same hash code
+		- unequal objects may has same hashCode
+
+	Java Beans
+	--------------
+
+
+	Spring Beans
+	---------------
+	
+Set<T> interface
+	-------------------------
+		- models a collection of objects to store unique elements 
+
+					     Collection<E> Interface
+						 |
+						Set<E> Interface
+						 |
+				--------------------------------------
+				AbstractSet			SortedSet<E>  Interface
+				   |				     |
+			---------------------------		NavigableSet<E> Interface
+			HashSet       CopyOnWriteArraySet	     |
+			   |	      (java.util.concurrent)	TreeSet<E>
+			LinkedHashSet
+
+
+	Set Implementation classes
+	--------------------------------
+
+				HashSet			LinkedHashSet				TreeSet 
+
+	Data Structure		hashtable		HashTable+double linkedlist		BalancedTree
+	null values		yes			yes					yes
+	Duplicates		no			no					no
+	synchronized		no			no					no
+	initial capacity	16			16					NA
+	ordering		unordered		ordered by insertion			sorted order
+
+
+	**=> ensure the equals() and hashCode() method must be overridden 
+
+	Synchronized sets
+	------------------------
+		1. Collections.synchronizedSet(set)
+
+		2. CopyOnWriteArraySet class 
+
+	Comparable and Comparator
+	----------------------------
+
+		Comparable<E> interface
+			- int compareTo(E e)
+
+		Comparator<E> interface 
+			- to create external comparators 
+			- int compare(E e1, E e2)
+
+		
+			the compare()/compareTo() methods return a "CompareValue"
+
+				0 	= both objects are same 
+				> 1	= the current object is greater than the other object 
+				< 1	= the current object is less than the other object 
+
+
+
+		class Employee implements Comparable<Employee>{
+
+			//override compareTo() method
+		}
+
+		SortedSet<Employee> empSet = new TreeSet<>();		
+
+
+
+		class EmpSalComparator implements Comparator<Employee>{
+			//override compare(E e1, E e2)
+		}
+
+		SortedSet<Employee> empSet = new TreeSet<>(new EmpSalComparator());	
+
+		empSet.add(new Employee(xxxxxx));	//hashCode()  --> equals() ---> compareXXXX()
+		
+
+		Set<String> namesSet = new TreeSet<>();
+		
+		namesSet.add("Ram");
+		namesSet("Ram");	-->hashCode() ---> equals()--->return false
+		namesSet.add("Jay");	-->hashCode() ---> equals()-->returns true --> compare() 
+		namesSet.add("Ravichandran");
+		namesSet.add("Ajay");
+		namesSet.add("Bob");
+		namesSet.add("Ravi");
+		namesSet.add("askfjdlsjfldksfjdlsfj");	
+
+
+	Queue<E> 
+	------------------------	
+
+					Collection<E>
+					    |
+					Queue<E> interface
+					    |
+			-------------------------------------------------------------
+			Deque<E>		BlockingQueue<E> 		AbstractQueue
+			interface 		interface			(abstract class)
+			   |			   |					|
+	-------------------------------		   |				---------------------------------------
+	BlockingDeque<E> 	ArrayDeque<E>	   |				PriorityQueue<E>   	DelayQueue    
+ 	interface 		class		   |				class
+						   |
+					   -----------------------------
+					    ArrayBlockQueue<E>	   PriorityBlockingQueue<E>
+					    class		   class
+
+	Implementations of Queue
+	-------------------------------
+
+	   General purpose queues 
+	   -----------------------------
+
+		LinkedList
+
+		PriorityQueue<E>
+
+		ArrayDeque<E>
+
+
+	   Concurrent queues
+	   ------------------------- 
+		ArrayBlockingQueue<E>
+
+		PriorityBlockingQueue<E>
+
+		DelayQueue<E>
+
+
+
+	 Operations on the queue
+	 -----------------------------
+
+		insert operation
+
+		remove operation
+
+		examine operation
+
+
+	Queue Interface
+	---------------------------
+				(throws exceptions)		
+		insert		add(e)				offer(e)
+
+		remove		remove()			poll()
+
+		examine		element()			peek()
+		
+
+	Deque interface
+	--------------------
+				(throws exceptions)		
+		insert		add(e)				offer(e)
+				addFirst(e)			offerFirst(e)
+				addLast(e)			offerLast(e)
+
+		remove		remove()			poll()
+				removeFirst()			pollFirst()
+				removeLast()			pollLast()
+
+		examine		element()			peek()
+				getFirst()			peekFirst()
+				getLast()			peekLast()
+
+
+	BlockingQueue
+	-------------------
+				(throws exceptions)		
+		insert		add(e)				offer(e)	put(e)		offer(e, time, unit)
+
+		remove		remove()			poll()		take()		poll(time, unit)
+
+		examine		element()			peek()		 N/A
+
+
+	BlockingDeque 
+	-------------------	
+				(throws exceptions)		
+		insert		add(e)				offer(e)	put(e)		offer(e, time, unit)
+				addFirst(e)			offerFirst(e)   putFirst(e)
+				addLast(e)			offerLast(e)	putLast(e)
+
+		remove		remove()			poll()		take()		poll(time, unit)
+				removeFirst()			pollFirst()	takeFirst()
+				removeLast()			pollLast()	takeLast()
+
+		examine		element()			peek()		N/A
+				getFirst()			peekFirst()
+				getLast()			peekLast()
+
+
+
+ 	Map<K,V> interface
+	-------------------------
+		- models collection of key-value pairs 
+
+					Map<K,V> interface
+						|
+						|
+				  --------------------------------------------------------------	
+				  AbstractMap<K,V>				SortedMap<K,V> interface
+				  (abstract class)					|
+					|						|
+					|						|
+			------------------------------------------		NavigableMap<k,V> interface
+			HashTable	HashMap		EnumMap				|
+					  |					     TreeMap<K,V>
+					LinkedHashMap
+
+
+
+
+
+		HashTable		HashMap		ConcurrentHashMap	LinkedHashMap		TreeMap
+
+DS		hashtable		hashtable	hashtable		hashtable+	       	Red-BlackTree												double linkedlist
+
+nullKeys	no			1 nullkey	no			1 nullkey		no	
+
+nullvalues	yes			yes		no			yes			yes	
+
+duplicatekey	no			no		no			no			no
+
+ordering	unordered		unordered	unordered		order by insertion	sorted order 
+
+
+	Map<K,V> interface methods
+	--------------------------------
+		V put(K k, V v)
+
+		V get(K k)
+
+		boolean containsKey(K k)
+
+		boolean containsValue(V v)
+
+		Set<K> keySet()
+
+		Collection<V> values()
+
+		Set<Map.Entry<K,V>> entrySet()
+
+
+
